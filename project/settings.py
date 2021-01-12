@@ -30,7 +30,7 @@ if platform.dist()[0].lower() == 'debian':
 else:
     DEBUG = True
 
-ALLOWED_HOSTS = ['uwsgicluster', 'localhost', 'django-app', 'wasuaje.com', '45.77.166.71', 'wasuaje.appspot.com']
+ALLOWED_HOSTS = ['uwsgicluster', 'localhost', 'django-app', 'wasuaje.com', '45.77.166.71', 'wasuaje.appspot.com', 'heroku.com']
 
 
 # Application definition
