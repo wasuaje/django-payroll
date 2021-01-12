@@ -1,0 +1,205 @@
+{% extends 'app/base_bootstrap.html' %}
+{% load static %}
+  
+{% block body %} 
+
+		<div class="wrapper">
+			<div class="inner">
+				
+				<div id="calendar"></div>
+				<!-- <div class="modal" id="modal"> -->
+                 <div class="modal" id="modal" tabindex="-1" role="dialog" aria-labelledby="modal" aria-hidden="true">
+
+                </div>
+                <!-- <div class="modal" id="modal_client"> -->
+                <div class="modal" id="modal_client" tabindex="-1" role="dialog" aria-labelledby="modal" aria-hidden="true">
+                </div>
+			</div>
+		</div>
+		
+
+		<script>
+
+        $( function() {    
+            $(".nav li").removeClass("active");//this will remove the active class from  
+                                           //previously active menu item 
+            $('#agenda').addClass('active'); 
+                                                                                           
+			    window.selectedDate = "global"; 
+                myresources = "global";                
+                myresources = function () {
+                    var tmp = null;
+                    $.ajax({
+                        'type': "GET",
+                        'global': false,
+                        'async': false,
+                        'url': "{% url 'profesional-all' %}",
+                        'success': function (data) {
+                            tmp = data;
+                        }
+                    });
+                    return tmp;
+                }();
+
+                $('#modal').on('shown.bs.modal', function (event) {	
+					var modal = $(this)
+                    // console.log(selectedDate)
+					$.ajax({
+						url: "{% url 'appointment-modal' %}",
+						context: document.body,
+						data: { 'start': selectedDate.startStr, 
+                                'end': selectedDate.endStr,
+                                'profId': selectedDate.resource.id
+                                }
+					}).done(function(response) {
+						modal.html(response);
+					});
+                });
+                $('#modal_client').on('shown.bs.modal', function (event) {	
+                    
+					var modal = $(this)
+                    // console.log(selectedDate)
+					$.ajax({
+						url: "{% url 'crear-cliente-ajax-form' %}",
+						context: document.body						
+					}).done(function(response) {
+						modal.html(response);
+					});
+                });
+                // $('#modal').on('hidden.bs.modal', function () {
+                //             // $('body').removeClass('modal-open')
+                //         $(".modal-backdrop").remove();
+                // })
+                
+                $.contextMenu({
+                    selector: '.fc-time-grid-event',                     
+                    determinePosition: function($menu){
+                    // Position using jQuery.ui.position 
+                    // http://api.jqueryui.com/position/
+                            $menu.css('display', 'block')
+                                .position({ my: "center top", at: "center bottom", of: this, offset: "0 0",   collision: "fit"})
+                                .css('display', 'none');
+                        } ,
+                    trigger: 'right',                    
+                    build: function(element, event) {
+                        return {
+                                callback: function(key, options) {
+                                    //  var m = "clicked: " + key;
+                                    //  window.console && console.log(options.$trigger.context.href) || alert(m); 
+                                    // cancelar turno                                                                        
+                                    if (key == 'delete'){                            
+                                        window.location.href = options.$trigger.context.href
+
+                                    }   //Abonar
+                                    if (key == 'edit'){       
+                                        str = options.$trigger.context.href;
+                                        // alert(str)
+                                        event_id = str.substring(str.lastIndexOf("/") + 1, str.length);
+                                        window.location.href = '/webapp/crear_venta/?event_id='+event_id;
+                                    }                            
+                                },                            
+                            items: {
+                                foo: {
+                                    name: "Client: " + $(element).find( "div.fc-title").html() + " - " + $(element).find( "div.fc-time").find("span").html()
+                                }                            
+                            }
+                        }
+                    },                    
+                    items: {                        
+                        "edit": {name: "Abonar", icon: "edit"},
+                        "delete": {name: "Cancelar", icon: "delete"},
+                        "sep1": "---------",
+                        "quit": {name: "Quit", icon: function(){
+                            return 'context-menu-icon context-menu-icon-quit';
+                        }},
+                        "sep2": "---------"
+                    }
+                });
+
+                // $('.fc-title').on('click', function(e){
+                //     console.log('clicked', this);
+                // })                                 
+            
+
+            })
+
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            var today = moment().day();
+
+            var calendarEl = document.getElementById('calendar');
+            
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+            schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
+            plugins: [ 'interaction', 'resourceTimeGrid'],
+            firstDay: 1,
+            hiddenDays: [ 0], // hide sundays
+            customButtons: {
+                myCustomButton: {
+                text: 'Exit',
+                click: function() {
+                    window.location.href = '/webapp'
+                     }
+                }
+            },
+            timezone: false ,
+            defaultView: 'resourceTimeGridWeek',
+            // defaultDate: '2019-04-10',
+            firstDay: today,
+            datesAboveResources: true,
+            allDaySlot: false,
+            navLinks: true, // can click day/week names to navigate views
+            editable: false,
+            selectable: true,
+            minTime: '10:00',
+            maxTime: '20:00',
+            header: {
+                    left:   'title',
+                    center: 'resourceTimeGridMonth,resourceTimeGridWeek,resourceTimeGridDay',
+                    right:  'prev,next,myCustomButton'
+                    },
+            resources: myresources,
+            eventRender: function(info) {                    
+                // var tooltip = new Tooltip(info.el, {
+                //     title: info.event.title,
+                //     placement: 'right',
+                //     trigger: 'hover',
+                //     html:true,
+                //     container: 'body'
+                // });                
+
+                // console.log(tippy)
+                },
+            eventSources: [
+                    {
+                    url: '/webapp/get_events',
+                    type: 'GET',
+                    error: function() {
+                        alert('there was an error while fetching events!');
+                    },
+                        color: '#4cbcd2',   // a non-ajax option
+                        textColor: 'white' // a non-ajax option
+                    },
+                        
+                ],
+            select: function(startDate) {
+                    // $.ajax({
+                    // 		url: "{% url 'appointment-modal' %}",
+                    // 		context: document.body
+                    // 	});
+                    // alert('selected ' + startDate.format() + ' to ' + endDate.format());
+                    selectedDate = startDate ;
+                    jQuery('#modal').modal('toggle');
+                    // $.post( "webapp/appointment", function( data ) {
+                    // 	$( ".result" ).html( data );
+                    // });
+                }
+            });
+
+            calendar.render();
+            
+        });
+
+</script>
+<!-- This templates was made by Colorlib (https://colorlib.com) -->
+{% endblock %}

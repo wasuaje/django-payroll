@@ -1,0 +1,161 @@
+{% load static %}
+
+<!-- Modal -->
+
+<style type="text/css">
+    input[name='total'] {font-weight:bold;}
+ </style>
+
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modal">Appointment Registration</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">05$</span>
+                </div>
+                <input type="text" name="5_pesos" class="form-control" aria-label="Dollar amount (with dot and two decimal places)">
+                <div class="input-group-append">
+                  <span name="5_pesos" class="input-group-text sum">0.00</span>
+                </div>
+            </div>
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">10$</span>
+                </div>
+                <input type="text" name="10_pesos" class="form-control" aria-label="Dollar amount (with dot and two decimal places)">
+                <div class="input-group-append">
+                  <span name="10_pesos" class="input-group-text sum">0.00</span>
+                </div>
+            </div>
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">20$</span>
+                </div>
+                <input type="text" name="20_pesos" class="form-control" aria-label="Dollar amount (with dot and two decimal places)">
+                <div class="input-group-append">
+                  <span name="20_pesos" class="input-group-text sum">0.00</span>
+                </div>
+            </div>
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">50$</span>
+                </div>
+                <input type="text" name="50_pesos" class="form-control" aria-label="Dollar amount (with dot and two decimal places)">
+                <div class="input-group-append">
+                  <span name="50_pesos" class="input-group-text sum">0.00</span>
+                </div>
+            </div>
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">100$</span>
+                </div>
+                <input type="text" name="100_pesos" class="form-control" aria-label="Dollar amount (with dot and two decimal places)">
+                <div class="input-group-append">
+                  <span name="100_pesos" class="input-group-text sum">0.00</span>
+                </div>
+            </div>
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">200$</span>
+                </div>
+                <input type="text" name="200_pesos" class="form-control" aria-label="Dollar amount (with dot and two decimal places)">
+                <div class="input-group-append">
+                  <span name="200_pesos" class="input-group-text sum">0.00</span>
+                </div>
+            </div>
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">500$</span>
+                </div>
+                <input type="text" name="500_pesos" class="form-control" aria-label="Dollar amount (with dot and two decimal places)">
+                <div class="input-group-append">
+                  <span name="500_pesos" class="input-group-text sum">0.00</span>
+                </div>
+            </div>
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">1000$</span>
+                </div>
+                <input type="text" name="1000_pesos" class="form-control" aria-label="Dollar amount (with dot and two decimal places)">
+                <div class="input-group-append">
+                  <span name="1000_pesos" class="input-group-text sum">0.00</span>
+                </div>
+            </div>
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Total</span>
+                </div>
+                <input type="text" name="total" class="form-control" readonly aria-label="Dollar amount (with dot and two decimal places)">
+                <div class="input-group-append">
+                  <span name="total" class="input-group-text sum">$</span>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>							
+                                
+		
+    <script>
+    function SubTotal(obj) {
+            subTotal = 0
+            valor =  $("input[name="+obj.name+"]").val()    
+            mult = obj.name.split("_", 1)
+            subTotal = valor * mult
+            $("span[name="+obj.name+"]").html(subTotal)
+            // parentDiv = obj.closest('.formset')
+
+            // rate = parseFloat($(parentDiv).find('.rate').val())
+            // quantity = parseInt($(parentDiv).find('.quantity').val())
+            // tax = $(parentDiv).find('.tax option:selected').html()//.
+
+            // tax = tax.match(/\d+/);
+            // if (tax)
+            //     tax = parseFloat(tax[0], 10)
+            // else
+            //     return
+
+            // if (!isNaN(rate) && !isNaN(quantity) && $.isNumeric(tax)) {
+            //     subTotal = rate * quantity * (100 + tax) / 100
+            //     $(parentDiv).find('.total').val(subTotal)
+            // }
+        }
+
+        function Total() {
+
+            subTotal = 0
+            $("span[name$='_pesos']").each(function () {
+                // console.log($(this))
+                console.log('###'+$(this).html()+'###')
+                val = parseFloat($(this).html() * 1)
+                subTotal += val
+            });
+            // console.log(subTotal)  
+            if (!isNaN($('#id_monto_apertura').val()))            
+                apertura = parseFloat($('#id_monto_apertura').val())
+            if (!isNaN(subTotal))            
+                $('#total').val(apertura+subTotal)
+            $("input[name='total']").val(subTotal)
+
+        }
+    
+
+    $( function() {			  
+        $("input[name$='_pesos']").on("blur", function (e) {
+            SubTotal(this);
+            Total();
+        });
+    })
+        
+
+    
+            
+    </script>

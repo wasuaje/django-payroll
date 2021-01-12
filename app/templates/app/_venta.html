@@ -1,0 +1,204 @@
+{% extends 'app/base_bootstrap.html' %}
+{% load static %}
+{% block body %}
+
+<div class="wrapper">
+    <div class="inner">
+        {% if object %}
+        <form role="form" action="{% url 'modificar_venta' object.pk %}" method="post" style="width: 100%">
+            <h3>Modificar Venta</h3>
+            {% else %}
+            <form role="form" action="{% url 'crear_venta' %}" method="post" style="width: 100%">
+                <h3>Crear Venta</h3>
+                {% endif %}
+                {% csrf_token %}
+                <div class="panel panel-default">
+                    <div class="panel-body">                       
+                            <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        <label for="cliente" >Cliente</label>
+                                        {{ form.contact }}
+                                    </div>
+                                    
+                                    <div class="form-group col-md-6">
+                                        <label for="fecha">Fecha</label>                                    
+                                        {{ form.date }}
+                                    </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="factura" >Factura</label>                                    
+                                     {{ form.invoice }}
+                                </div>
+                                <div class="form-group col-md-6">                                    
+                                    {{ form.payment_method }}
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <strong>Producto</strong>
+                            </div>
+                            <div class="col-lg-4">
+                                <strong>Precio</strong>
+                            </div>
+                            <div class="col-lg-4">
+                                <strong>Profesional</strong>
+                            </div>
+                        </div>
+                        {{ detalle_compra_form_set.management_form }}
+                        {% for detalle_compra_form in detalle_compra_form_set %}
+                        <div class="row">
+                            <div class="col-lg-4">
+                                {% if detalle_compra_form.product.errors %}
+                                {% for error in detalle_compra_form.product.errors %}
+                                <div class="alert alert-danger alert-dismissible" role="alert">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    <strong>Error: </strong> {{ error|escape }}
+                                </div>
+                                {% endfor %}
+                                {% endif %}
+                                {{ detalle_compra_form.product }}
+                            </div>
+                            <div class="col-lg-4">
+                                {% if detalle_compra_form.price.errors %}
+                                {% for error in detalle_compra_form.price.errors %}
+                                <div class="alert alert-danger alert-dismissible" role="alert">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    <strong>Error: </strong> {{ error|escape }}
+                                </div>
+                                {% endfor %}
+                                {% endif %}
+                                {{ detalle_compra_form.price }}
+                            </div>
+                            <div class="col-lg-4">
+                                {% if detalle_compra_form.profesional.errors %}
+                                {% for error in detalle_compra_form.profesional.errors %}
+                                <div class="alert alert-danger alert-dismissible" role="alert">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    <strong>Error: </strong> {{ error|escape }}
+                                </div>
+                                {% endfor %}
+                                {% endif %}
+                                {{ detalle_compra_form.profesional }}
+                            </div>
+                        </div>
+                        {% endfor %}
+                        <div class="row">                            
+                            <div class="col-lg-12">
+                                <hr>
+                            </div>
+                        </div>
+                        <div class="row">
+                                <div class="col-lg-4">
+                                </div>
+                                <div class="col-lg-4">
+                                    <h2>Descuento (%)</h2>
+                                </div>
+                                <div class="col-lg-4">
+                                    <input type="number" id="descuento_p" name="descuento_p" value="0"
+                                        class="input-group" />
+                                    <input type="number" id="descuento" name="descuento" disabled value="0.00"
+                                        class="input-group" />
+                                </div>
+                            </div>
+                        <div class="row">
+                            <div class="col-lg-4">
+                            </div>
+                            <div class="col-lg-4">
+                                <h2>Total</h2>
+                            </div>
+                            <div class="col-lg-4">
+                                <input type="number" id="total" name="total" disabled value="0.00"
+                                    class="input-group" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12">
+
+                            </div>
+                        </div>
+                        <div class="form-row">
+                                <div class="form-group col-sm-6">
+                                        <input type="submit" class="btn btn-danger" name="submit" value="Guardar">
+                                </div>
+                                <div class="form-group col-sm-6">                                    
+                                    <a href="{% url 'listado_ventas' %}">
+                                                <p class="p-big" >Salir</p>
+                                    </a>
+                                </div>
+                        </div>                        
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <hr>
+                        </div>
+                    </div>
+
+                </div>
+            </form>
+    </div>
+</div>
+<script>
+    function calculateSubTotal(obj) {
+        subTotal = 0
+
+        parentDiv = obj.closest('.formset')
+
+        rate = parseFloat($(parentDiv).find('.rate').val())
+        quantity = parseInt($(parentDiv).find('.quantity').val())
+        tax = $(parentDiv).find('.tax option:selected').html()//.
+
+        tax = tax.match(/\d+/);
+        if (tax)
+            tax = parseFloat(tax[0], 10)
+        else
+            return
+
+        if (!isNaN(rate) && !isNaN(quantity) && $.isNumeric(tax)) {
+            subTotal = rate * quantity * (100 + tax) / 100
+            $(parentDiv).find('.total').val(subTotal)
+        }
+    }
+    function calculateTotal() {
+
+        subTotal = 0
+        $("input[name$='-price']").each(function () {
+            // console.log($(this))
+            // console.log('###'+$(this).val()+'###')
+            val = parseFloat($(this).val() * 1)
+            subTotal += val
+        });
+        // console.log(subTotal)        
+        if (!isNaN(subTotal))
+            descuento = subTotal*$('#descuento_p').val()/100
+            $('#descuento').val(descuento)
+            $('#total').val(subTotal-descuento)
+    }
+    $(function () {
+        window.selectedDate = "global";
+        window.myEnd = "global";
+        $.datepicker.setDefaults({ dateFormat: 'yy-mm-dd' });
+        $("#id_date").datepicker();
+        calculateTotal();
+        $("#descuento_p").on("blur", function (e) {
+            // calculateSubTotal(this);
+            calculateTotal();
+        });
+        $("input[name$='-price']").on("blur", function (e) {
+            // calculateSubTotal(this);
+            calculateTotal();
+        });
+
+
+    })
+</script>
+{% endblock %}

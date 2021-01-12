@@ -1,0 +1,84 @@
+{% load static %}
+
+<!-- Modal -->
+
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modal">Appointment Registration</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <form action="{% url 'appointment' %}" method="post" id="myform">
+                {% csrf_token %}
+                          
+                          {{ form.non_field_errors }}
+                          <div class="form-row ">
+                              <div class="form-group col-md-6">
+                                  {{ form.client_name.errors }}
+                                  {{ form.client_name }}                                                    
+                              </div>		
+                              <div class="form-group col-md-6">                                                 
+                                  <!-- <button class="btn btn-primary  btn-sm" id="myButton">
+                                      +
+                                  </button> -->
+                                  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal_client">
+                                      +
+                                    </button>
+                              </div>		
+                          </div>
+                          <div class="form-group ">
+                              {{ form.profesional.errors }}
+                              {{ form.profesional }}
+                          </div>
+                          <div class="form-group ">
+                              {{ form.speciality.errors }}
+                              {{ form.speciality }}
+                          </div>
+                          <div class="form-group ">
+                              {{ form.start.errors }}
+                              {{ form.start }}
+                          </div>
+                          <div class="form-group">
+                              {{ form.end.errors }}
+                              {{ form.end }}
+                          </div>
+                          <!-- <div class="form-login">
+                              <button>Save</button>	
+                              <button type="button" class="btn btn-link" data-dismiss="modal">Close</button>
+                          </div> -->
+                          <br>
+                      </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" id="send" class="btn btn-primary">Save changes</button>
+        </div>
+      </div>
+    </div>				
+                                
+		
+		<script>
+
+        
+		$( function() {			  
+            $('#myButton').on('click', function (event) {	                          
+                    // $('#modal_client').show()   
+                    $('#modal_cliente').modal('toggle');
+                });
+            
+            $('#send').on('click', function (event) {	                          
+                $('#myform').submit()                    
+            });
+           
+            // $('#modal_client').on('hidden.bs.modal', function () {
+            //                 // $('body').removeClass('modal-open')
+            //      $(".modal-backdrop").remove();
+            // })
+
+		});
+        
+              
+        </script>

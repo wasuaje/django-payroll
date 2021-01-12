@@ -1,0 +1,74 @@
+version: "3.3"
+services:
+  # static-web:
+  #   build: static-site/.
+  #   volumes:
+  #     - type: volume
+  #       source: staticsite
+  #       target: /usr/src/static-site
+  #       volume:
+  #         nocopy: true
+  #   command: ["sh", "static-site-build"]
+  front:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    depends_on:
+      #- static-web
+      - test-app-mysql
+      - django-app
+    volumes:
+      - type: volume
+        source: mystatic
+        target: /usr/src/static
+        volume:
+          nocopy: true
+      - type: volume
+        source: staticsite
+        target: /usr/src/static-site
+        volume:
+          nocopy: true
+      - type: bind
+        source: ./http-nginx
+        target: /etc/nginx/conf.d
+  mysql-server:
+    image: mysql:8.0
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    ports:
+      - "3306:3306"
+      - "33060:33060"
+    environment:
+      MYSQL_ROOT_PASSWORD: ${mysql_root_pass}
+      MYSQL_DATABASE: mydb
+      MYSQL_USER: ${mysql_user}
+      MYSQL_PASSWORD: ${mysql_pass}
+    volumes:
+      - type: bind
+        source: /root/mysql-persist-beauty
+        target: /var/lib/mysql
+      - type: bind
+        source: ./mysql
+        target: /etc/mysql
+  django-app:
+    build: .
+    environment:
+      mysql_user: ${mysql_user}
+      mysql_pass: ${mysql_pass}
+      TWILIO_AUTH_TOKEN: ${TWILIO_AUTH_TOKEN}
+      TWILIO_SID: ${TWILIO_SID}
+      django_adminpass: ${django_adminpass}
+    ports:
+      - "8090:8090"
+    volumes:
+      - type: volume
+        source: mystatic
+        target: /usr/src/static
+        volume:
+          nocopy: true
+    depends_on:
+      - test-app-mysql
+    command: ["./start"]
+volumes:
+  mystatic:
+  staticsite:

@@ -1,0 +1,152 @@
+{% extends 'app/base_bootstrap.html' %}
+{% load static %}
+{% block body %}
+
+<div class="wrapper">
+    <div class="inner">
+        {% if object %}
+            <form role="form" id="myform" action="{% url 'modificar-cliente' object.pk %}" method="post" style="width: 100%">
+            <h3>Modificar Cliente</h3>
+        {% else %}
+            <form role="form" id="myform" action="{% url 'crear-cliente' %}" method="post" style="width: 100%">
+            <h3>Crear Cliente</h3>
+         {% endif %}
+                {% csrf_token %}
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-lg-3">
+                                <label>Cliente</label>
+                            </div>
+                            <div class="col-lg-9">
+                                    {{ form.name.errors }}
+                                    {{ form.name }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-3">
+                                <label>Telefono</label>
+                            </div>                            
+                            <div class="col-lg-9">
+                                {{ form.phone.errors }}
+                                <p id="msg" >Enter a Valid Number</p>
+                                <input type="hidden" id="output2" name="output2">                                
+                                {{ form.phone }}
+                            </div>                            
+
+                        </div>
+                        
+                        <div class="row">                            
+                            <div class="col-lg-12">
+                                <hr>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-lg-12">
+
+                            </div>
+                        </div>                        
+                        <div class="form-row">
+                                <div class="form-group col-sm-6">
+                                        <input type="submit" class="btn btn-danger" name="submit" value="Guardar">
+                                </div>
+                                <div class="form-group col-sm-6">                                    
+                                    <a href="{% url 'clientes' %}">
+                                        <p class="p-big" >Salir</p>
+                                    </a>
+                                </div>
+                        </div>    
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <hr>
+                        </div>
+                    </div>
+
+                </div>
+            </form>
+    </div>
+</div>
+<script>
+    
+    $(function () {
+        window.selectedDate = "global";
+        window.myEnd = "global";
+        // $.datepicker.setDefaults({ dateFormat: 'mm-dd-yy' });
+        var input = document.querySelector("#id_phone");
+        var output = document.querySelector("#output2");
+        var msg = document.querySelector("#msg");
+        var iti = window.intlTelInput(input, {
+            // allowDropdown: false,
+            // autoHideDialCode: true,
+            autoPlaceholder: "polite",
+            // dropdownContainer: document.body,
+            // excludeCountries: ["us"],
+            // formatOnDisplay: false,
+            // geoIpLookup: function(callback) {
+            //   $.get("http://ipinfo.io", function() {}, "jsonp").always(function(resp) {
+            //     var countryCode = (resp && resp.country) ? resp.country : "";
+            //     callback(countryCode);
+            //   });
+            // },
+            hiddenInput: "full_number",
+            initialCountry: "ar",
+            // localizedCountries: { 'de': 'Deutschland' },
+            // nationalMode: false,
+            // customPlaceholder: function(selectedCountryPlaceholder, selectedCountryData) {
+            //     return "e.g. " + selectedCountryPlaceholder;
+            // },
+            // onlyCountries: ['us', 'gb', 'ch', 'ca', 'do'],
+            // placeholderNumberType: "MOBILE",
+            // preferredCountries: ['cn', 'jp'],
+            separateDialCode: true,
+            utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/15.0.1/js/utils.js"
+            });
+        
+            
+        var handleChange = function() {
+            // var text = (iti.isValidNumber()) ? "International Nro: " + iti.getNumber() : "Please enter a valid number below";
+            // var textNodeValid = document.createTextNode(text);
+
+            //var text = iti.getNumber();
+            // console.log(output, text, iti.isValidNumber(), iti.getNumber());
+            if ( iti.isValidNumber()){
+                output.value = "";
+                output.value = iti.getNumber();
+                msg.innerHTML = "";
+                msg.style.color = 'black'
+            }else{
+                msg.innerHTML = "";
+                msg.style.color = 'red';
+                text = "Please enter a valid number below"
+                textNode = document.createTextNode(text);
+                msg.appendChild(textNode);
+            }
+            
+            
+        };
+        input.addEventListener('change', handleChange);
+        input.addEventListener('keyup', handleChange);
+              
+        $('#myform').submit(function() {
+            // DO STUFF...
+            if ( iti.isValidNumber()){
+                output.value = "";
+                output.value = iti.getNumber();
+                msg.innerHTML = "";
+                msg.style.color = 'black'
+                $("#id_phone").val(output.value)
+                return true; // return false to cancel form action
+            }else{
+                console.log(output.value)
+                return false; // return false to cancel form action
+            }
+            
+        });
+
+
+    })
+</script>
+{% endblock %}

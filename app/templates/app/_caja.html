@@ -1,0 +1,276 @@
+{% extends 'app/base_bootstrap.html' %}
+{% load static %}
+{% block body %}
+
+<div class="modal" id="modal_arqueo" tabindex="-1" role="dialog" aria-labelledby="modal" aria-hidden="true">
+
+</div>
+<div class="wrapper">
+
+    <div class="inner">
+        {% if object %}
+        <form role="form" id="myform" name="modifica" action="{% url 'modificar-caja' object.pk %}" method="post" style="width: 100%">
+            <h3>Modificar Caja</h3>
+            {% else %}
+            <form role="form" id="myform" name="crea" action="{% url 'crear-caja' %}" method="post" style="width: 100%">
+                <h3>Apertura Caja</h3>
+                {% endif %}
+                {% csrf_token %}
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="row">                            
+                            <div class="col-lg-3">
+                                <label>Fecha</label>
+                            </div>                        
+                            <div class="col-lg-3">
+                                {{ form.fecha }}
+                            </div>
+                        </div>                        
+                        <div class="row">                            
+                            <div class="col-lg-3">
+                                <label>Descripcion</label>
+                                </div>
+                            <div class="col-lg-3">
+                                {{ form.descripcion }}
+                            </div>
+                            <div class="col-lg-1">
+                                <button id="btn_arqueo" class="btn btn-primary btn-sm" data-toggle="tooltip" data-placement="top" title="Abre pantalla de arqueo">
+                                    <span class="fa fa-calculator" ></span>
+                                </button>                                
+                            </div>
+                        </div>
+                        <div class="row">                                                 
+                            <div class="col-lg-3">
+                                <label>Monto Apertura</label>
+                            </div>
+                            <div class="col-lg-3">
+                                {{ form.monto_apertura }}
+                            </div>
+                            {% if not object %}
+                            <div class="col-lg-1">
+                                <button id="get_prev_caja" class="btn btn-primary btn-sm" data-toggle="tooltip" data-placement="top" title="Trae ultimo cierre">
+                                    <span class="fa fa-download" ></span>
+                                </button>                                
+                            </div>
+                            {% endif %}
+                        </div>
+                        <div class="row">
+                            
+                                                        
+                        </div>
+                        {{ detalle_caja_form_set.management_form }}
+                        {% for detalle_compra_form in detalle_caja_form_set %}
+                        <div class="row">                            
+                            <div class="col-lg-4">
+                                {% if detalle_compra_form.product.errors %}
+                                {% for error in detalle_compra_form.concepto.errors %}
+                                <div class="alert alert-danger alert-dismissible" role="alert">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    <strong>Error: </strong> {{ error|escape }}
+                                </div>
+                                {% endfor %}
+                                {% endif %}
+                                {{ detalle_compra_form.concepto }}
+                            </div>                            
+                            <div class="col-lg-4">
+                                {% if detalle_compra_form.monto.errors %}
+                                {% for error in detalle_compra_form.monto.errors %}
+                                <div class="alert alert-danger alert-dismissible" role="alert">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    <strong>Error: </strong> {{ error|escape }}
+                                </div>
+                                {% endfor %}
+                                {% endif %}
+                                {{ detalle_compra_form.monto }}
+                            </div>
+                            
+                        </div>
+                        {% endfor %}
+                        <div class="row">                            
+                            <div class="col-lg-12">
+                                <hr>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-4">
+                            </div>                               
+                        </div>
+                        <div class="row">                            
+                            <div class="col-lg-4 form-login">
+                                <h2>Cierre</h2>
+                            </div>
+                            <div class="col-lg-4 ">
+                                {{ form.monto_cierre }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12">
+
+                            </div>
+                        </div>
+                        <div class="form-row">
+                                <div class="form-group col-sm-6">
+                                        <input type="submit" class="btn btn-danger" name="submit" value="Guardar">
+                                </div>
+                                <div class="form-group col-sm-6">                                    
+                                    <a href="{% url 'caja' %}">
+                                        <p class="p-big" >Salir</p>
+                                    </a>
+                                </div>
+                        </div>    
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <hr>
+                        </div>
+                    </div>
+
+                </div>
+            </form>
+    </div>
+</div>
+<script>
+    function calculateSubTotal(obj) {
+        subTotal = 0
+
+        parentDiv = obj.closest('.formset')
+
+        rate = parseFloat($(parentDiv).find('.rate').val())
+        quantity = parseInt($(parentDiv).find('.quantity').val())
+        tax = $(parentDiv).find('.tax option:selected').html()//.
+
+        tax = tax.match(/\d+/);
+        if (tax)
+            tax = parseFloat(tax[0], 10)
+        else
+            return
+
+        if (!isNaN(rate) && !isNaN(quantity) && $.isNumeric(tax)) {
+            subTotal = rate * quantity * (100 + tax) / 100
+            $(parentDiv).find('.total').val(subTotal)
+        }
+    }
+    function calculateTotal() {
+
+        subTotal = 0
+        $("input[name$='-monto']").each(function () {
+            // console.log($(this))
+            // console.log('###'+$(this).val()+'###')
+            val = parseFloat($(this).val() * 1)
+            subTotal += val
+        });
+        // console.log(subTotal)  
+        if (!isNaN($('#id_monto_apertura').val()))            
+            apertura = parseFloat($('#id_monto_apertura').val())
+        if (!isNaN(subTotal))            
+            $('#id_monto_cierre').val(apertura+subTotal)
+    }
+
+    $(function () {
+        window.selectedDate = "global";
+        window.myEnd = "global";
+        $.datepicker.setDefaults({ dateFormat: 'yy-mm-dd' });
+        tipoform = $("#myform").attr('name')
+        if (tipoform==="modifica"){
+            $("#id_monto_apertura").attr('readonly',true);    
+            $("#id_fecha").attr('readonly',true);    
+        } else {
+            $("#id_fecha").datepicker();
+        }
+        
+        // always in readonly
+        $("#id_monto_cierre").attr('readonly',true);        
+        
+        // calcula at entering the page
+        calculateTotal();
+        
+        $("input[name$='-monto']").on("blur", function (e) {
+            // calculateSubTotal(this);
+            calculateTotal();
+        });
+        $("input[name$='_apertura']").on("blur", function (e) {
+            // calculateSubTotal(this);
+            calculateTotal();
+        });
+    })
+    $('#btn_arqueo').on('click', function (event) {
+        event.preventDefault();
+        jQuery('#modal_arqueo').modal('toggle');
+    });
+
+    $('#modal_arqueo').on('shown.bs.modal', function (event) {	
+                    
+					var modal = $(this)
+                    // console.log(selectedDate)
+					$.ajax({
+						url: "{% url 'arqueo-modal' %}",
+						context: document.body						
+					}).done(function(response) {
+						modal.html(response);
+					});
+        });
+
+    $("#get_prev_caja").on("click", function (e) {
+            e.preventDefault()
+            $.ajax({
+                type:'GET',
+                url:'{% url "get-prev-caja" %}',                
+                success:function(json){
+                    // console.log(json)
+                    monto_cierre = json.monto_cierre                                        
+                    $("#id_monto_apertura").val(monto_cierre)                                        
+                    calculateTotal()
+                },
+                error : function(xhr,errmsg,err) {
+                console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+            }
+            });
+            
+        });
+    $("input[name$='-monto']").keydown(function(event) {
+        if(event.which == 113) { //F2
+            // console.log(event.target.name)
+            $.ajax({
+                type:'GET',
+                url:'{% url "get-venta-dia" %}',                
+                data: {'id_fecha': $("#id_fecha").val()},
+                success:function(json){
+                    // console.log(json)
+                    total = json.total_ventas
+                    // $("#"+event.target.name).val(total)
+                    $("input[name="+event.target.name+"]").val(total)
+                    calculateTotal()
+                },
+                error : function(xhr,errmsg,err) {
+                console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+            }
+            });
+            return false;
+        }        
+    });
+    $("input[name$='-monto']").doubletap(function(event) {      //
+            // console.log(event.target.name)
+            $.ajax({
+                type:'GET',
+                url:'{% url "get-venta-dia" %}',                
+                data: {'id_fecha': $("#id_fecha").val()},
+                success:function(json){
+                    // console.log(json)
+                    total = json.total_ventas
+                    // $("#"+event.target.name).val(total)
+                    $("input[name="+event.target.name+"]").val(total)
+                    calculateTotal()
+                },
+                error : function(xhr,errmsg,err) {
+                console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+            }
+            });
+            return false;       
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,171 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>.:Beauty:.</title>
+  <!-- STYLE CSS -->  
+  <link rel="stylesheet" href="{% static 'app/css/style.css' %}">
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"  >
+  <link rel="stylesheet" href="{% static 'app/fullcalendar/core/main.css' %}">
+  <link rel="stylesheet" href="{% static 'app/fullcalendar/daygrid/main.css' %}">
+  <link rel="stylesheet" href="{% static 'app/fullcalendar/timegrid/main.css' %}">
+
+  <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.0/fullcalendar.min.css"> -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+  <link rel="shortcut icon" href="{% static 'app/images/favicon.ico' %}" />
+
+  <link rel="stylesheet" href="{% static 'app/phone/css/intlTelInput.css' %}" />
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-contextmenu/2.7.1/jquery.contextMenu.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="https://cdn.datatables.net/rowgroup/1.1.1/css/rowGroup.dataTables.min.css" rel="stylesheet">
+
+  <script src="https://code.jquery.com/jquery-1.12.4.js" ></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-contextmenu/2.7.1/jquery.contextMenu.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-contextmenu/2.7.1/jquery.ui.position.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+  <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>  
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.0/fullcalendar.min.js"></script> -->
+  <!-- <script src="{% static 'app/fullcalendar/moment/main.js' %}"></script> -->
+  <script src="{% static 'app/fullcalendar/core/main.js' %}"></script>
+  <script src="{% static 'app/fullcalendar/interaction/main.js' %}"></script>
+  <script src="{% static 'app/fullcalendar/daygrid/main.js' %}"></script>
+  <script src="{% static 'app/fullcalendar/timegrid/main.js' %}"></script>
+  <script src="{% static 'app/fullcalendar/resource-common/main.js' %}"></script> 
+  <script src="{% static 'app/fullcalendar/resource-daygrid/main.js' %}"></script>
+  <script src="{% static 'app/fullcalendar/resource-timegrid/main.js' %}"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  <script src= "{% static 'app/phone/js/intlTelInput.js' %}"></script>  
+  <script src= "https://cdn.datatables.net/rowgroup/1.1.1/js/dataTables.rowGroup.min.js"></script>  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-touch-events/1.0.5/jquery.mobile-events.js"></script>
+
+  
+  <style>
+    @font-face {
+      font-family: "ElMessiri-SemiBold";
+      src: url("{% static 'app/fonts/el_messiri/ElMessiri-SemiBold.ttf' %}" ); }
+    @font-face {
+      font-family: "Montserrat-Regular";
+      src: url("{% static 'app/fonts/montserrat/Montserrat-Regular.ttf' %}"); }
+    @font-face {
+      font-family: "Montserrat-SemiBold";
+      src: url("{% static 'app/fonts/montserrat/Montserrat-SemiBold.ttf' %}"); }
+    * {
+      -webkit-box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      box-sizing: border-box; }
+
+      button.fc-button {
+        letter-spacing: 2px;
+        border: none;
+        width: 80px;
+        height: 30px;
+        margin-right: 19px;
+        border-radius: 8.5px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+        background: #4cbcd2;
+        font-size: 15px;
+        color: #fff;
+        text-transform: uppercase;
+        font-family: "Montserrat-SemiBold";
+        -webkit-transform: perspective(1px) translateZ(0);
+        transform: perspective(1px) translateZ(0);
+        box-shadow: 0 0 1px rgba(0, 0, 0, 0); }
+        button:hover {
+          -webkit-animation-name: hvr-wobble-horizontal;
+          animation-name: hvr-wobble-horizontal;
+          -webkit-animation-duration: 1s;
+          animation-duration: 1s;
+          -webkit-animation-timing-function: ease-in-out;
+          animation-timing-function: ease-in-out;
+          -webkit-animation-iteration-count: 1;
+          animation-iteration-count: 1; }
+
+     h2, h3 {
+      font-size: 25px;
+      font-family: "ElMessiri-SemiBold";
+      text-align: center;
+      margin-bottom: 27px;
+      color: #4cbcd2; }
+    
+    .intl-tel-input {
+        display: table-cell;
+    }
+    .intl-tel-input .selected-flag {
+        z-index: 4;
+    }
+    .intl-tel-input .country-list {
+        z-index: 5;
+    }
+    .input-group .intl-tel-input .form-control {
+        border-top-left-radius: 4px;
+        border-top-right-radius: 0;
+        border-bottom-left-radius: 4px;
+        border-bottom-right-radius: 0;
+    }
+    .p-big{
+        font-size: 25px;
+    }
+
+    </style>
+  
+</head>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="/webapp">BeautyApp</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+      
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item" id="agenda">
+              <a class="nav-link" href="{% url 'agenda' %}">Agenda <span class="sr-only"></span></a>
+            </li>
+            <li class="nav-item" id="clientes">
+                    <a class="nav-link" href="{% url 'clientes' %}">Clientes <span class="sr-only"></span></a>
+            </li>
+            <li class="nav-item" id="ventas">
+                    <a class="nav-link" href="{% url 'listado_ventas' %}">Ventas <span class="sr-only"></span></a>
+            </li>
+            <li class="nav-item" id="caja">
+                    <a class="nav-link" href="{% url 'caja' %}">Caja <span class="sr-only"></span></a>
+            </li>
+            <li class="nav-item dropdown" id="reportes">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Reportes
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="{% url 'ventas-profesional' %}">Ventas por profesional</a>
+                <a class="dropdown-item" href="{% url 'ventas-diarias' %}">Ventas Diarias</a>                
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#">Something else here</a>
+              </div>
+            </li>
+            {% if user.is_authenticated %}
+                <li class="nav-item">            
+                    <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">{{ user.get_username }}</a>
+                </li>
+            {% endif %}                          
+            <li class="nav-link">
+                    <a href="{% url 'logout'%}?next={{request.path}}">Logout <span class="sr-only"></span></a>
+            </li>
+            
+          </ul>          
+        </div>
+      </nav>
+<body>
+    {% block body %}
+    
+    {% endblock %}
+    
+</body>
+</html>

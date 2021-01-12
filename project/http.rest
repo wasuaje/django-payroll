@@ -1,0 +1,8 @@
+
+POST localhost:8000/api-token-auth
+Content-Type: application/json
+
+{
+    "username": "wasuaje",
+    "pasword": "C4r1cu40!"
+}

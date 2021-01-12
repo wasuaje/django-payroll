@@ -1,0 +1,38 @@
+{% extends 'app/base.html' %}
+
+{% load static %}
+{% block body %}
+
+<div class="wrapper">
+    <div class="inner">
+        <div class="image-holder">
+            <img src={% static "app/images/registration-form-4.jpg" %} alt="">
+        </div>              
+      
+      <form method="get" action="{% url 'login' %}">            
+            <h3>Beauty Logout</h3>
+                
+            <div class="form-login">
+                    <button>Login Again</button>		                    
+            </div>        
+      </form>
+      
+      {# Assumes you setup the password_reset view in your URLconf #}
+      <p></p>
+
+    </div>
+</div>
+<script>
+            
+        $( function() {
+            $('#id_username').attr('class', 'form-control');
+            $('#id_username').attr('placeholder', 'Login');
+            $('#id_password').attr('class', 'form-control');
+            $('#id_password').attr('placeholder', 'Password');
+        });
+            
+                  
+</script>
+{% endblock %}
+  
+

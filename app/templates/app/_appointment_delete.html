@@ -1,0 +1,67 @@
+{% extends 'app/base.html' %}
+{% load static %}
+{% block body %}
+
+		<div class="wrapper">
+			<div class="inner">
+				<div class="image-holder">
+					<img src={% static "app/images/registration-form-4.jpg" %} alt="">
+				</div>
+				
+        <form action="{% url 'appointment-delete' pk=id %}" method="post">
+          {% csrf_token %}
+					<h3>Cancel Appointment</h3>
+					{{ form.non_field_errors }}
+					<div class="form-holder ">
+						{{ form.profesional.errors }}
+						{{ form.profesional }}
+					</div>
+					<div class="form-holder ">
+						{{ form.speciality.errors }}
+						{{ form.speciality }}
+					</div>
+					<div class="form-holder ">
+						{{ form.start.errors }}
+						{{ form.start }}
+					</div>
+					<div class="form-holder">
+						{{ form.end.errors }}
+						{{ form.end }}
+					</div>
+
+					<div class="form-login">
+						<button>Save</button>	
+						<a href="/webapp/agenda">Cancel</a>
+					</div>
+				</form>
+			</div>
+		</div>
+
+		<!--<script src={% static "app/js/jquery-3.3.1.min.js" %}></script>
+		<script src={% static "app/js/main.js" %}></script>-->
+		<!-- <script>
+			$( function() {
+				$( "#id_date" ).datepicker();
+				$('#id_start').timepicker({   timeFormat: 'h:mm p',
+											interval: 30,
+											minTime: '10',
+											maxTime: '8:00pm',
+											defaultTime: '09',
+											startTime: '09:00',
+											dynamic: false,
+											dropdown: true,
+											scrollbar: true});
+				$('#id_end').timepicker({   timeFormat: 'h:mm p',
+											interval: 30,
+											minTime: '10',
+											maxTime: '8:00pm',
+											defaultTime: '09',
+											startTime: '09:00',
+											dynamic: false,
+											dropdown: true,
+											scrollbar: true});
+							} );
+			</script> -->
+	<!-- <script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script> -->
+	<!-- This templates was made by Colorlib (https://colorlib.com) -->
+{% endblock %}

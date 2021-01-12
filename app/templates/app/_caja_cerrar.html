@@ -1,0 +1,68 @@
+{% extends 'app/base_bootstrap.html' %}
+{% load static %}
+{% block body %}
+
+<div class="wrapper">
+    <div class="inner">        
+        <form role="form" id="myform" action="{% url 'cierre-caja' object.pk %}" method="post" style="width: 100%">
+            <h3>Cierre de Caja</h3>        
+                {% csrf_token %}
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-lg-3">
+                                <label>Caja</label>
+                            </div>
+                            <div class="col-lg-9">
+                                    {{ form.fecha.errors }}
+                                    {{ form.fecha }}
+                            </div>
+                        </div>                        
+                        
+                        <div class="row">                            
+                            <div class="col-lg-12">
+                                <hr>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-lg-12">
+
+                            </div>
+                        </div>                        
+                        <div class="form-row">
+                                <div class="form-group col-sm-6">
+                                        <input type="submit" class="btn btn-danger" name="submit" value="Cerrar">
+                                </div>
+                                <div class="form-group col-sm-6">                                    
+                                    <a href="{% url 'caja' %}">
+                                        <p class="p-big" >Salir</p>
+                                    </a>
+                                </div>
+                        </div>        
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <hr>
+                        </div>
+                    </div>
+
+                </div>
+            </form>
+    </div>
+</div>
+<script>
+    
+    $(function () {
+        window.selectedDate = "global";
+        window.myEnd = "global";
+        
+                
+        $("#id_fecha").attr('readonly', true)
+        
+
+
+    })
+</script>
+{% endblock %}

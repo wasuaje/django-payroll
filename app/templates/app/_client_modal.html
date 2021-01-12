@@ -1,0 +1,191 @@
+{% load static %}
+
+<!-- Modal -->
+
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="modal_client">Crear Cliente</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+                <form role="form" id="client_form" method="post" >                            
+                            {% csrf_token %}
+                            <div class="panel panel-default">
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-lg-3">
+                                            <label>Cliente</label>
+                                        </div>
+                                        <div class="col-lg-9">
+                                                {{ form.name.errors }}
+                                                {{ form.name }}
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-3">
+                                            <label>Telefono</label>
+                                        </div>                            
+                                        <div class="col-lg-9">
+                                            {{ form.phone.errors }}
+                                            <p id="msg" >Enter a Valid Number</p>
+                                            <input type="hidden" id="output2" name="output2">                                
+                                            {{ form.phone }}
+                                        </div>                            
+            
+                                    </div>
+                                    
+                                    <!-- <div class="row">                            
+                                        <div class="col-lg-12">
+                                            <hr>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="row">
+                                        <div class="col-lg-12">
+            
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-3">                            
+                                        </div>
+                                        <div class="col-md-3">                                                                            
+                                                <button id="save">Save</button>	
+                                        </div>
+                                        <div class="col-md-3">                                                                
+                                            <button type="button" class="btn btn-link" data-dismiss="modal">Close</button>
+                                        </div>
+                                    </div> -->
+                                </div>    
+                            </div>
+                        </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="button" id="save" class="btn btn-primary">Save changes</button>
+        </div>
+        </div>
+    </div>
+
+
+            
+
+<script>
+    
+    $(function () {
+        window.selectedDate = "global";
+        window.myEnd = "global";
+        // $.datepicker.setDefaults({ dateFormat: 'mm-dd-yy' });
+        var input = document.querySelector("#id_phone");
+        var output = document.querySelector("#output2");
+        var msg = document.querySelector("#msg");
+        var iti = window.intlTelInput(input, {
+            // allowDropdown: false,
+            // autoHideDialCode: true,
+            autoPlaceholder: "polite",
+            // dropdownContainer: document.body,
+            // excludeCountries: ["us"],
+            // formatOnDisplay: false,
+            // geoIpLookup: function(callback) {
+            //   $.get("http://ipinfo.io", function() {}, "jsonp").always(function(resp) {
+            //     var countryCode = (resp && resp.country) ? resp.country : "";
+            //     callback(countryCode);
+            //   });
+            // },
+            hiddenInput: "full_number",
+            initialCountry: "ar",
+            // localizedCountries: { 'de': 'Deutschland' },
+            // nationalMode: false,
+            // customPlaceholder: function(selectedCountryPlaceholder, selectedCountryData) {
+            //     return "e.g. " + selectedCountryPlaceholder;
+            // },
+            // onlyCountries: ['us', 'gb', 'ch', 'ca', 'do'],
+            // placeholderNumberType: "MOBILE",
+            // preferredCountries: ['cn', 'jp'],
+            separateDialCode: true,
+            utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/15.0.1/js/utils.js"
+            });
+        
+            
+        var handleChange = function() {
+            // var text = (iti.isValidNumber()) ? "International Nro: " + iti.getNumber() : "Please enter a valid number below";
+            // var textNodeValid = document.createTextNode(text);
+
+            //var text = iti.getNumber();
+            // console.log(output, text, iti.isValidNumber(), iti.getNumber());
+            if ( iti.isValidNumber()){
+                output.value = "";
+                output.value = iti.getNumber();
+                msg.innerHTML = "";
+                msg.style.color = 'black'
+            }else{
+                msg.innerHTML = "";
+                msg.style.color = 'red';
+                text = "Please enter a valid number below"
+                textNode = document.createTextNode(text);
+                msg.appendChild(textNode);
+            }
+            
+            
+        };
+        input.addEventListener('change', handleChange);
+        input.addEventListener('keyup', handleChange);
+              
+        // $('#client_form').submit(function() {
+        //     // DO STUFF...
+        //     if ( iti.isValidNumber()){
+                
+        //         $("#id_phone").val(output.value)                
+
+        //        $('#client_form').ajaxSubmit();
+
+        //         return false; // return false to cancel form action
+        //     }else{
+        //         console.log(output.value)
+        //         return false; // return false to cancel form action
+        //     }
+            
+        // });
+        $('#save').on('click', function (event) {	                          
+                $('#client_form').submit()                    
+            });
+        $(document).on('submit', '#client_form',function(e){
+            e.preventDefault()
+            $("#id_phone").val(output.value)              
+            $.ajax({
+                type:'POST',
+                url:'{% url "crear-cliente-ajax" %}',
+                data:{
+                    phone:$('#id_phone').val(),
+                    name:$('#id_name').val(),
+                    csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+                    action: 'post'
+                },
+                success:function(json){
+                    console.log(json)
+                    client_name = json.client_name
+                    client_id = json.client_id
+
+                    // var o = new Option(client_name, client_id, true, true);
+                    // $(o).html(client_name);
+                    // // $('#id_client_name').append(new Option(client_name, client_id, true, true));
+
+                    // /// jquerify the DOM object 'o' so we can use the html method
+                    // $(o).html(client_name);
+                    $("#id_client_name").append('<option value="'+client_id+'" selected>'+client_name+'</option>');
+                    // $('#modal_client').hide()                    
+                    $('#modal_client').modal('toggle');
+
+                },
+                error : function(xhr,errmsg,err) {
+                console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+            }
+            });
+        });
+
+
+
+    })
+</script>

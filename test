@@ -1,0 +1,18 @@
+#!/bin/bash
+
+python manage.py makemigrations  --no-input --settings=project.settings_test
+python manage.py migrate  --no-input  --settings=project.settings_test
+python manage.py makemigrations app --no-input --settings=project.settings_test
+python manage.py migrate app --no-input  --settings=project.settings_test
+python manage.py collectstatic --no-input --settings=project.settings_test
+python manage.py initadmin --settings=project.settings_test
+
+#python manage.py test --noinput --settings=project.settings_test 2> /var/log/test.log 1> /dev/null
+# test
+
+python manage.py test --noinput --settings=project.settings_test 
+
+if [ $? -ne 0 ]; then
+    cat /var/log/test.log
+    exit 1
+fi

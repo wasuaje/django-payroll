@@ -1,0 +1,77 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>.:Beauty:.</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<!-- STYLE CSS -->
+		<link rel="stylesheet" href="{% static "app/css/style.css" %}">
+		<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+		<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+		<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+		
+	</head>
+
+	<body>
+
+		<div class="wrapper">
+			<div class="inner">
+				<div class="image-holder">
+					<img src={% static "app/images/registration-form-4.jpg" %} alt="">
+				</div>
+				
+        <form action="{% url 'finish' %}" method="post">
+          {% csrf_token %}
+					<h3>Disclaimer</h3>
+					{{ form.non_field_errors }}
+					
+					<div class="form-holder">
+						<p>
+							I, ____ {{ request.session.name }}  _____   , being over the age of 21 hereby authorize Martha Chavez or Sandra
+							Morales to apply permanent cosmetics on me.  I choose to have this procedure done on me for cosmetic
+							purposes only.  I also understand that this procedure is not easily removed.  Typical results have been
+							explained to me, however complications may occur and NO GUARANTEE has been made to me as to
+							the final results of any of the procedure.  Martha or Sandra have informed me that it will take a total of
+							2 visits, 6 months apart from each other, to have the eyebrow and eyeliner procedure completed.  The
+							lip procedure does take more visits depending on the color that I want.  Payment is expected every time
+							a procedure has been done.  I have also been informed that in certain cases clients have formed fever
+							blisters when getting the lips done and that an over the counter medication can be used to treat them.  I
+							have informed Martha or Sandra of any health problems that would or could prevent me from having
+							this procedure done now or in the future and know of no other reason why I shouldn't have this cosmetic
+							procedure performed on me.  I am aware of the possibility of discomfort or pain, the permanence of the
+							marking, the risk of infection, and the possibility of an allergic reaction to the pigments or other materials
+							used.  If I use contact lenses, I have taken them off and will keep them off for the next 24 hrs.  I have been
+							given ORAL and WRITTEN instructions of the post care of my permanent cosmetics.  I agree that I fully
+							understand these guidelines and I have addressed any questions during my pre client consultation.  I will
+							follow them very carefully to ensure the best possible results.
+
+						</p>
+					</div>
+					<div class="checkbox">
+						
+							<!--<input type="checkbox"> I agree all statement in <a href="#">Terms & Conditions</a>-->
+							{{ form.acceptance.errors }}
+						    {{ form.acceptance }} I agree all statement in <a href="#">Terms & Conditions</a>
+							<span class="checkmark"></span>
+						
+					</div>
+
+					<div class="form-login">
+						<button>Finish</button>
+					</div>
+				</form>
+			</div>
+		</div>
+
+		<!--<script src={% static "app/js/jquery-3.3.1.min.js" %}></script>
+		<script src={% static "app/js/main.js" %}></script>-->
+		<script>
+			$( function() {
+				$( "#id_date" ).datepicker();
+			} );
+			</script>
+	</body><!-- This templates was made by Colorlib (https://colorlib.com) -->
+</html>
