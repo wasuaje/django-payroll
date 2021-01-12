@@ -165,24 +165,6 @@ STATIC_ROOT = "/usr/src/static"
 #STATIC_ROOT = "/mnt/c/Users/DA837XN/source/repos/beauty2/mysite/static-files"
 STATIC_URL = '/static/'
 
-TWILIO_SID =  os.environ['TWILIO_SID']
-TWILIO_AUTH_TOKEN = os.environ['TWILIO_AUTH_TOKEN']
-TWILIO_PHONE = 'whatsapp:+14155238886'
-LOGIN_REDIRECT_URL = '/webapp'
-
-REST_FRAMEWORK = {
-    # Use Django's standard `django.contrib.auth` permissions,
-    # or allow read-only access for unauthenticated users.
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.BasicAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
-    ],
-    'DEFAULT_PERMISSION_CLASSES': [
-        # 'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
-    ]
-
-}
-
 CORS_ORIGIN_ALLOW_ALL = True
 
 # CORS_ORIGIN_WHITELIST = [
